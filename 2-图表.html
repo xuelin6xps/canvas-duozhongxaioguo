@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        canvas{
+            background: gray;
+            display: block;
+            margin: 100px auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+    <script>
+        var oC = document.querySelector('canvas');
+        var cxt = oC.getContext('2d');
+        var w = oC.width = 300;
+        var h = oC.height = 300;
+        var deg = 0;
+        var new_deg = 0;
+        var text;
+        var text_w;
+        var dif = 0;
+        var loop;
+        function init() {
+            cxt.clearRect(0,0,w,h);
+            cxt.beginPath();
+            cxt.lineWidth = 30;
+            cxt.strokeStyle = '#333';
+            cxt.arc(w/2,h/2,100,0,2*Math.PI,false);
+            cxt.stroke();
+
+            var r = deg * Math.PI/180;
+            cxt.beginPath();
+            cxt.strokeStyle = 'red';
+            cxt.lineWidth = 30;
+            cxt.arc(w/2,h/2,100,-90*Math.PI/180,r-90*Math.PI/180,false);
+            cxt.stroke();
+
+            cxt.strokeStyle = 'blue';
+            cxt.font = '50px 微软雅黑';
+            cxt.lineWidth = 1;
+            //console.log( r,deg );
+            text = Math.floor(deg/360*100)+'%';
+            text_w = cxt.measureText(text).width;
+            cxt.strokeText(text,w/2-text_w/2,h/2+15);
+        }
+        draw();
+        function draw() {
+            new_deg = Math.floor(Math.random()*360);
+            dif = new_deg - deg;
+            loop = setInterval(play,1000/dif);
+        }
+        play();
+        function play() {
+            if( deg == new_deg ){
+                clearInterval(loop);
+            }
+            if( deg < new_deg ){
+                deg ++;
+            }else{
+                deg --;
+            }
+
+            init();
+        }
+        setInterval(draw,3000);
+        /**
+         * 1. 调用draw  -> 让new_deg发生改变 每隔多少间隔执行 play
+         * 2. 调用play之后 要让角度deg ++ 或 deg -- 改变，同时 根据deg角度 去绘制圆形和文字
+         * 3. 通过定时器 调用draw函数，让它自己动
+         */
+
+    </script>
+</body>
+</html>

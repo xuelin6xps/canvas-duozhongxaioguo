@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>TZ-追梦</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+        html,body{
+            height: 100%;
+            background-color:#5596BC;
+            position: relative;
+            perspective: 800px;
+            overflow: hidden;
+        }
+        div,b,i{
+            position: absolute;
+            transform-style: preserve-3d;
+        }
+        #city3d{
+            position: absolute;
+            left: 50%;
+            top: 50%;
+
+/*            margin-left: -200px;
+            margin-top: -200px;
+            width: 400px;
+            height: 400px;*/
+            background-color: #B9D2E0 ;
+            transform: rotateX(60deg) rotateZ(-120deg);
+            animation: play 50s linear infinite;
+        }
+        @keyframes play {
+            from{
+                transform: rotateX(60deg) rotateZ(-120deg);
+            }
+            to{
+                transform: rotateX(60deg) rotateZ(-240deg);
+            }
+        }
+        #city3d div b{
+            height: 100%;
+            background-color:rgba(176,208,223,0.9);
+            transform-origin: 0 0;
+            transform: rotateX(90deg);
+        }
+        #city3d div b>b{
+            background-color:rgba(128,174,197,0.9);
+            transform: rotateY(90deg);
+        }
+        #city3d div b>b>b{
+            /*left:20px;*/
+            right:0;
+            transform-origin: 100% 0;
+            background-color:rgba(176,208,223,0.9);
+            transform: rotateY(90deg);
+        }
+        #city3d div b>b>b>b{
+            background-color:rgba(128,174,197,0.9);
+            left: 0;
+            transform-origin: 0 0;
+            transform: rotateY(90deg);
+        }
+        #city3d div b>b>b>b>i{
+            bottom: 1px;
+            background-color:#d0e4ef;
+            transform-origin: 0 100%;
+            transform: rotateX(-90deg);
+        }
+        #city3d div.a b{
+            background-image: url('images/1.png');
+        }
+        #city3d div.b b{
+            background-image: url('images/2.png');
+        }
+        #city3d div.c b{
+            background-image: url('images/3.png');
+        }
+        #city3d div.d b{
+            background-image: url('images/4.png');
+        }
+        #city3d div.e b{
+            background-image: url('images/5.png');
+        }
+    </style>
+</head>
+<body>
+<!--<div id="city3d">
+        <div class="a" style="height: 160px;background: red">
+            <b style="width: 30px">
+                <b style="width: 20px">
+                    <b style="width: 30px">
+                        <b style="width:20px">
+                            <i style="width:20px;height: 30px"></i>
+                        </b>
+                    </b>
+                </b>
+            </b>
+        </div>
+    </div>-->
+    <script>
+        function City3d(base) {
+            this.base = base;
+            this.max = 60; // 每栋楼盘的间距
+        }
+        City3d.prototype.build = function () {
+            this.buildArea();
+//            this.buildEstate(0,0);
+//            this.buildEstate(100,100);
+//            this.buildEstate(100,50);
+            for( var i=0;i<this.base;i++ ){
+                for( var j=0;j<this.base;j++ ){
+                    this.buildEstate(i*this.max,j*this.max);
+                }
+            }
+        }
+        // 有地皮后才可以构建楼盘， 构建地皮
+        City3d.prototype.buildArea = function () {
+            var This = this;
+            if( !this.city ){
+                this.city = document.createElement('div');
+                this.city.id = 'city3d';
+                this.city.onclick = function () {
+                    This.build();
+                }
+            }else{
+                this.city.innerHTML = '';
+            }
+            /*this.city = document.createElement('div');
+            this.city.id = 'city3d';*/
+            var num = this.base * this.max;
+            this.city.style.width = this.city.style.height = num + 'px';
+            this.city.style.marginLeft = this.city.style.marginTop = -num/2 + 'px';
+            document.body.appendChild(this.city);
+        }
+        // 创建 楼盘 ，楼盘要很多面
+        City3d.prototype.buildEstate =function (l,t) {
+            var estate = document.createElement('div');
+            estate.style.height = this.setH() + 'px';
+            estate.style.left = l + 'px';
+            estate.style.top = t + 'px';
+            estate.className = this.style[this.getStyle()];
+            this.city.appendChild(estate);
+
+
+
+            var w1 = this.setW();
+            var w2 = this.setW();
+
+            var b1 = document.createElement('b');
+            b1.style.width = w1 + 'px';
+            estate.appendChild(b1);
+
+            var b2 = document.createElement('b');
+            b2.style.width = w2 + 'px';
+            b1.appendChild(b2);
+
+            var b3 = document.createElement('b');
+            b3.style.width = w1 + 'px';
+            b2.appendChild(b3);
+
+            var b4 = document.createElement('b');
+            b4.style.width = w2 + 'px';
+            b3.appendChild(b4);
+
+            var i = document.createElement('i');
+            i.style.width = w2 + 'px';
+            i.style.height = w1 + 'px';
+            b4.appendChild(i);
+        }
+        City3d.prototype.style = ['a','b','c','d','e'];
+
+        // 宽度 21~40
+        City3d.prototype.setW = function () {
+            return Math.floor(Math.random()*20)+21;
+        }
+        // 宽度 21-150
+        City3d.prototype.setH = function () {
+            return Math.floor(Math.random()*130)+21;
+        }
+        City3d.prototype.getStyle = function () {
+            return Math.floor(Math.random()*5);
+        }
+        
+        new City3d(10).build();
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

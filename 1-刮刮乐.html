@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>TZ-追梦</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+        html,body{
+            height: 100%;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        body{
+            overflow: hidden;
+        }
+        img{
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <img src="img/bg.jpg" draggable="false" alt="">
+    <script>
+        let oImg = document.querySelector('img');
+        // complete 判断是否加载完成 （加载完成返回true）
+        //
+        if( oImg.complete || oImg.readyState == 'complete' || oImg.readyState == 'loading' ){
+            draw();
+        }else{
+            oImg.onload = draw;
+        }
+        
+        function draw() {
+            let oC = document.createElement('canvas');
+            oC.draggable = false;
+            oC.style.position = 'absolute';
+            oC.style.left = oImg.offsetLeft + 'px';
+            oC.style.top = oImg.offsetTop + 'px';
+            oC.width = oImg.width;
+            oC.height = oImg.height;
+            oImg.parentNode.insertBefore(oC,oImg);
+            let cxt = oC.getContext('2d');
+            cxt.fillStyle = '#bbb';
+            cxt.fillRect(0,0,oC.width,oC.height);
+
+            oC.onmousedown = function (e) {
+                e = e || event;
+                let x = e.pageX - this.offsetLeft;
+                let y = e.pageY - this.offsetTop;
+                cxt.beginPath();
+                cxt.arc(x,y,50,0,2*Math.PI);
+                cxt.fill();
+                // 合成 显示透明色
+                cxt.globalCompositeOperation = 'destination-out';
+                cxt.lineCap = 'round';
+                cxt.lineWidth = 100;
+                this.onmousemove = function (e) {
+                    e = e || event;
+                    cxt.beginPath();
+                    cxt.moveTo(x,y);
+                    cxt.lineTo(e.pageX - oC.offsetLeft,e.pageY-oC.offsetTop);
+                    cxt.stroke();
+                    cxt.beginPath();
+                    x = e.pageX - oC.offsetLeft;
+                    y = e.pageY - oC.offsetTop;
+                }
+                this.onmouseup = function () {
+                    this.onmousemove = null;
+                    this.onmouseup = null;
+                    check();
+                }
+            }
+
+            function check() { // 检测刮开的面积
+                let data = cxt.getImageData(0,0,oC.width,oC.height).data;
+                let n = 0;
+                for( let i=0;i<data.length;i+=4 ){
+                    // 判断一下被刮开的像素点对应的rgba === 0
+                    if( data[i] == 0 && data[i+1] == 0 && data[i+2] == 0 && data[i+3] == 0 ){
+                        n ++;
+                    }
+                }
+                let f = n*100/(oC.width*oC.height);
+                document.title = '被刮开的面积：' + f.toFixed(2) + '%';
+                if( f>60 ){
+                    cxt.beginPath();
+                    cxt.fillRect(0,0,oC.width,oC.height);
+                    document.title = '全部显示完成';
+                }
+            }
+        }
+
+
+    </script>
+</body>
+</html>

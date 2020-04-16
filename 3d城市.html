@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>TZ-追梦</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+        html,body{
+            height: 100%;
+            background-color:#5596BC;
+            position: relative;
+            perspective: 800px;
+        }
+        div,b,i{
+            position: absolute;
+            transform-style: preserve-3d;
+        }
+        #city3d{
+            position: absolute;
+            left: 50%;
+            margin-left: -200px;
+            top: 50%;
+            margin-top: -200px;
+            width: 400px;
+            height: 400px;
+            background-color: #B9D2E0 ;
+            transform: rotateX(60deg) rotateZ(-120deg);
+        }
+        #city3d div b{
+            height: 100%;
+            background-color:rgba(176,208,223,0.9);
+            transform-origin: 0 0;
+            transform: rotateX(90deg);
+        }
+        #city3d div b>b{
+            background-color:rgba(128,174,197,0.9);
+            transform: rotateY(90deg);
+        }
+        #city3d div b>b>b{
+            /*left:20px;*/
+            right:0;
+            transform-origin: 100% 0;
+            background-color:rgba(176,208,223,0.9);
+            transform: rotateY(90deg);
+        }
+        #city3d div b>b>b>b{
+            background-color:rgba(128,174,197,0.9);
+            left: 0;
+            transform-origin: 0 0;
+            transform: rotateY(90deg);
+        }
+        #city3d div b>b>b>b>i{
+            bottom: 1px;
+            background-color:#d0e4ef;
+            transform-origin: 0 100%;
+            transform: rotateX(-90deg);
+        }
+        #city3d div.a b{
+            background-image: url('images/1.png');
+        }
+        #city3d div.b b{
+            background-image: url('images/2.png');
+        }
+        #city3d div.c b{
+            background-image: url('images/3.png');
+        }
+        #city3d div.d b{
+            background-image: url('images/4.png');
+        }
+        #city3d div.e b{
+            background-image: url('images/5.png');
+        }
+    </style>
+</head>
+<body>
+    <div id="city3d">
+        <div class="a" style="height: 160px;background: red">
+            <b style="width: 30px">
+                <b style="width: 20px">
+                    <b style="width: 30px">
+                        <b style="width:20px">
+                            <i style="width:20px;height: 30px"></i>
+                        </b>
+                    </b>
+                </b>
+            </b>
+        </div>
+
+        <div class="b" style="top:150px;height: 160px;background: red">
+            <b style="width: 30px">
+                <b style="width: 20px">
+                    <b style="width: 30px">
+                        <b style="width:20px">
+                            <i style="width:20px;height: 30px"></i>
+                        </b>
+                    </b>
+                </b>
+            </b>
+        </div>
+
+        <div class="c" style="left:200px;top:250px;height: 160px;background: red">
+            <b style="width: 30px">
+                <b style="width: 20px">
+                    <b style="width: 30px">
+                        <b style="width:20px">
+                            <i style="width:20px;height: 30px"></i>
+                        </b>
+                    </b>
+                </b>
+            </b>
+        </div>
+    </div>
+</body>
+</html>

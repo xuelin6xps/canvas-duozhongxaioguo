@@ -1,0 +1,81 @@
+<!doctype html><!--声明当前文档为html文档-->
+<html lang="en"><!--语言为英语-->
+	<head><!--头部-->
+		<meta charset="UTF-8"><!--字符编码：utf-8国际编码  gb2312中文编码-->
+		<meta name="Keywords" content="关键词">
+		<meta name="Description" content="描述">
+		<title>Document</title>
+		<style>/*css样式表的衣柜*/
+		*{
+			margin:0px;
+			padding:0px;
+		}
+		
+		</style>
+	</head>
+	<body><!--身体-->
+		<img src="bixin.png" id="img">
+	</body>
+	<script>
+		var oImg = document.getElementById("img");
+		/*
+			complete 判断是否加载完成 (加载完成返回true)
+			onerror  图片加载失败时候调用
+			onload   图片加载完成时候调用
+			readyState == "complete"
+			readyState == "loading"
+		*/
+		if (oImg.complete || oImg.readyState == "complete" || oImg.readyState == "loading" )
+		{
+			draw();
+		}else{
+			oImg.onload = draw;
+		}
+		
+		function draw(){
+			//创建canvas节点
+			var can = document.createElement("canvas");
+			can.style.position = "absolute";
+			can.style.left = oImg.offsetLeft +"px";
+			can.style.top = oImg.offsetTop +"px";
+			can.width = oImg.width;
+			can.height = oImg.height;
+			oImg.parentNode.insertBefore(can,oImg);
+			var cxt = can.getContext("2d");
+			//绘制灰色矩形框覆盖图片
+			cxt.fillStyle = "#bbb";
+			cxt.fillRect(0,0,can.width,can.height);
+			
+			//合成覆盖显示透明色
+			cxt.globalCompositeOperation = "destination-out";
+			cxt.strokeStyle = "#eee";
+			cxt.lineCap = "round";
+			cxt.lineWidth = 30;
+
+			can.onmousedown = function(ev){
+				var ev = ev || window.event;
+				var x = ev.pageX - can.offsetLeft;
+				var y = ev.pageY - can.offsetTop;
+				var This = this;
+				cxt.beginPath();
+				cxt.arc(x,y,15,0,Math.PI*2,false);
+				cxt.fill();
+				this.onmousemove = function(ev){
+					var ev = ev || window.event;
+					cxt.beginPath();
+					cxt.moveTo(x,y);
+					cxt.lineTo(ev.pageX - can.offsetLeft,ev.pageY - can.offsetTop);
+					x = ev.pageX - can.offsetLeft;
+					y = ev.pageY - can.offsetTop;
+					//cxt.closePath();
+					cxt.stroke();
+				}
+				this.onmouseup = function(){
+					This.onmousemove = null;
+					This.onmouseup = null;
+				}
+			}
+			
+		}
+	</script>
+</html>
